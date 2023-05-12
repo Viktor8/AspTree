@@ -3,14 +3,9 @@ using AspTree.Exceptions;
 using AspTree.Model;
 using AspTree.Model.ErrorTracking;
 using AspTree.Services;
-using Azure;
-using Azure.Core;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using System.Text.Json;
-using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +34,14 @@ builder.Services.AddScoped<ErrorJournalService>();
 
 var app = builder.Build();
 
+
+using var scope = app.Services.CreateScope();
+await using var mainDbContext = scope.ServiceProvider.GetRequiredService<DataTreeContext>();
+await mainDbContext.Database.MigrateAsync();
+
+await using var errorDbContext = scope.ServiceProvider.GetRequiredService<ErrorJournalContext>();
+await errorDbContext.Database.MigrateAsync();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -61,7 +64,7 @@ app.UseExceptionHandler(application =>
     application.Run(async context =>
     {
         context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-        context.Response.ContentType = Text.Plain;
+        context.Response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
 
 
         var exceptionHandlerPath = context.Features.Get<IExceptionHandlerPathFeature>();
