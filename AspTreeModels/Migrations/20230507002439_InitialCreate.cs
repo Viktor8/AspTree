@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace AspTree.Migrations
+namespace AspTree.Model.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

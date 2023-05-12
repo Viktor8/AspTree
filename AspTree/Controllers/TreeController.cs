@@ -14,7 +14,7 @@ namespace AspTree.Controllers
     {
         DataNodeService _nodeService;
 
-        public TreeController(DataNodeService nodeService, ILogger<TreeController> logger)
+        public TreeController(DataNodeService nodeService)
         {
             _nodeService = nodeService;
 

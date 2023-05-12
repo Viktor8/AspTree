@@ -1,5 +1,4 @@
-﻿using AspTree.DTO;
-using AspTree.Exceptions;
+﻿using AspTree.Exceptions;
 using AspTree.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Xml.Linq;
@@ -40,12 +39,12 @@ namespace AspTree.Services
 
 
 
-        public async Task<DataNode> Create(DataNodeCreateRequest nodeCreateRequest)
+        public async Task<DataNode> Create(string name, int? parentNodeId)
         {
             var node = new DataNode
             {
-                Name = nodeCreateRequest.Name,
-                ParentNodeId = nodeCreateRequest.ParentNodeId
+                Name = name,
+                ParentNodeId = parentNodeId
             };
 
             await VerifyParrentNodeExistance(node.ParentNodeId);
@@ -67,17 +66,17 @@ namespace AspTree.Services
         }
 
 
-        public async Task<DataNode> Update(int id, DataNodeUpdateRequest nodeUpdate)
+        public async Task<DataNode> Update(int id, string newName, int? newParentId)
         {
             var node = await GetById(id);
 
-            await VerifyParrentNodeExistance(nodeUpdate.ParentNodeId);
-            await VerifyAbsenceOfCyclicReferences(node.Id, nodeUpdate.ParentNodeId);
-            await VerifyNameUniquenessAmongSiblings(nodeUpdate.ParentNodeId, nodeUpdate.Name);
+            await VerifyParrentNodeExistance(newParentId);
+            await VerifyAbsenceOfCyclicReferences(node.Id, newParentId);
+            await VerifyNameUniquenessAmongSiblings(newParentId, newName);
 
 
-            node.Name = nodeUpdate.Name;
-            node.ParentNodeId = nodeUpdate.ParentNodeId;
+            node.Name = newName;
+            node.ParentNodeId = newParentId;
             await _dbContext.SaveChangesAsync();
 
             return node;

@@ -27,7 +27,7 @@ namespace AspTree.Services
             return await _dbContext.RecordsRepository.Where(r => r.Id == id).SingleOrDefaultAsync() ?? throw new SecureException("No record found with such an id");
         }
 
-        internal IQueryable<ErrorJournalRecord> Find(DateTime? fromUtc, DateTime? toUtc, string? searchString)
+        public IQueryable<ErrorJournalRecord> Find(DateTime? fromUtc, DateTime? toUtc, string? searchString)
         {
             var result = _dbContext.RecordsRepository as IQueryable<ErrorJournalRecord>;
 

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace AspTree.Migrations
+namespace AspTree.Model.Migrations
 {
     [DbContext(typeof(DataTreeContext))]
     [Migration("20230508143647_TableRenaming")]

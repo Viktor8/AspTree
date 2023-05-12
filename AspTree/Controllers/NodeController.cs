@@ -14,20 +14,18 @@ namespace AspTree.Controllers
     [Route("api/Tree.[controller]")]
     public class NodeController: ControllerBase
     {
-        ILogger<TreeController> _logger;
         DataNodeService _nodeService;
 
         public NodeController(DataNodeService nodeService, ILogger<TreeController> logger)
         {
             _nodeService = nodeService;
-            _logger = logger;
         }
 
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] DataNodeCreateRequest newNode)
         {
-            var result = await _nodeService.Create(newNode);
+            var result = await _nodeService.Create(newNode.Name, newNode.ParentNodeId);
             return Ok(result);
         }
 
@@ -45,7 +43,7 @@ namespace AspTree.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, [FromBody] DataNodeUpdateRequest nodeUpdate)
         {
-            var updatedNode = await _nodeService.Update(id, nodeUpdate);
+            var updatedNode = await _nodeService.Update(id, nodeUpdate.Name, nodeUpdate.ParentNodeId);
             return Ok(updatedNode);
         }
 
